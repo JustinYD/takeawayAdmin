@@ -58,7 +58,6 @@ export default {
       var that = this;
       this.$http.get("http://www.smartdk.top:4000/takeaway_orderlist").then(
         function(res) {
-          console.log(res)
           if (res.body!='fail') {
             that.orderTotal=res.body.length 
           }
@@ -125,12 +124,18 @@ export default {
     rgb(117, 22, 224)
   );
 }
+.userTotal:hover{
+  box-shadow:0 5px 12px 0px rgb(109, 205, 243,0.8) ;
+}
 .orderTotal {
   background-image: linear-gradient(
     to bottom right,
     rgb(23, 211, 195),
     rgb(255, 0, 234)
   );
+}
+.orderTotal:hover{
+  box-shadow:0 5px 12px 0px rgb(255, 0, 234,0.5) ;
 }
 .sendTotal {
   background-image: linear-gradient(
@@ -139,11 +144,17 @@ export default {
     rgb(183, 0, 255)
   );
 }
+.sendTotal:hover{
+  box-shadow:0 5px 12px 0px rgb(23, 51, 211,0.5) ;
+}
 .finishTotal {
   background-image: linear-gradient(
     to bottom right,
     rgb(23, 211, 195),
     rgb(0, 162, 255)
   );
+}
+.finishTotal:hover{
+  box-shadow:0 5px 12px 0px rgb(23, 211, 195,0.5) ;
 }
 </style>\
