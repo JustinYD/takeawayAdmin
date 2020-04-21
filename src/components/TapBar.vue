@@ -10,12 +10,9 @@
             </el-menu-item>
             <el-menu-item index="2" route="usermanager">
                 <i class="el-icon-user-solid"></i>
-                <span slot="title">用户管理</span>
+                <span slot="title">用户订单</span>
             </el-menu-item>
-            <el-menu-item index="3" route="setting">
-                <i class="el-icon-setting"></i>
-                <span slot="title">设置</span>
-            </el-menu-item>
+            
         </el-menu>
     </div>
 </template>

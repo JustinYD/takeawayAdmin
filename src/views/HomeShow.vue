@@ -26,12 +26,32 @@
         </div>
       </el-col>
     </el-row>
+    <el-row :gutter="35">
+      <el-col :span="6">
+        <div id="main" class="echartsBox"></div>
+      </el-col>
+      <el-col :span="14">
+        <div class="settingBox">
+          <div>
+            短信发送阈值设置
+            <el-input-number v-model="min" @change="changeMin" :min="120" :max="5000" :step="50"></el-input-number>米
+          </div>
+          <!-- <div>
+            
+            添加通知<el-input placeholder="请输入内容" v-model="notice" clearable></el-input>
+          </div> -->
+        </div>
+      </el-col>
+    </el-row>
   </div>
 </template>
 <script>
+import echartsLiquidfill from "echarts-liquidfill";
 export default {
   data() {
     return {
+      min: "",
+      notice:'',
       userTotal: 0,
       orderTotal: 0,
       sendTotal: 0,
@@ -39,13 +59,16 @@ export default {
     };
   },
   methods: {
+    changeMin(value) {
+      console.log(value);
+    },
     //获取用户列表
     getuser() {
       var that = this;
       this.$http.get("http://www.smartdk.top:4000/takeaway_userlist").then(
         function(res) {
-          if (res.body!='fail') {
-            that.userTotal=res.body.length 
+          if (res.body != "fail") {
+            that.userTotal = res.body.length;
           }
         },
         function(res) {
@@ -58,8 +81,9 @@ export default {
       var that = this;
       this.$http.get("http://www.smartdk.top:4000/takeaway_orderlist").then(
         function(res) {
-          if (res.body!='fail') {
-            that.orderTotal=res.body.length 
+          if (res.body != "fail") {
+            that.orderTotal = res.body.length;
+            that.drawTest();
           }
         },
         function(res) {
@@ -72,8 +96,9 @@ export default {
       var that = this;
       this.$http.get("http://www.smartdk.top:4000/takeaway_successlist").then(
         function(res) {
-          if (res.body!='fail') {
-            that.finishTotal=res.body.length 
+          if (res.body != "fail") {
+            that.finishTotal = res.body.length;
+            that.drawTest();
           }
         },
         function(res) {
@@ -86,14 +111,61 @@ export default {
       var that = this;
       this.$http.get("http://www.smartdk.top:4000/takeaway_sendlist").then(
         function(res) {
-          if (res.body!='fail') {
-            that.sendTotal=res.body.length 
+          if (res.body != "fail") {
+            that.sendTotal = res.body.length;
           }
         },
         function(res) {
           console.log(res.status);
         }
       );
+    },
+    drawTest() {
+      var total = this.orderTotal;
+      var finish = this.finishTotal;
+      var value = finish / total;
+      var data = [];
+      data.push(value);
+      data.push(value);
+      data.push(value);
+      data.push(value);
+      data.push(value);
+      data.push(value);
+      //var echarts = require("echarts");
+
+      var myChart = this.$echarts.init(document.getElementById("main"));
+      // 绘制图表
+      myChart.setOption({
+        backgroundColor: "#fff",
+        title: {
+          text: "配送完成率",
+          textStyle: {
+            fontWeight: "normal",
+            fontSize: 25,
+            color: "rgb(97, 142, 205)"
+          }
+        },
+        series: [
+          {
+            type: "liquidFill",
+            radius: "80%",
+            data: data,
+            backgroundStyle: {
+              borderWidth: 5,
+              borderColor: "rgb(255,0,255,0.9)",
+              color: "rgb(255,0,255,0.01)"
+            },
+            label: {
+              normal: {
+                formatter: (value * 100).toFixed(2) + "%",
+                textStyle: {
+                  fontSize: 50
+                }
+              }
+            }
+          }
+        ]
+      });
     }
   },
   created() {
@@ -101,6 +173,9 @@ export default {
     this.getorder();
     this.getsuccess();
     this.getsend();
+  },
+  mounted() {
+    this.drawTest();
   }
 };
 </script>
@@ -111,10 +186,10 @@ export default {
   color: white;
   cursor: pointer;
 }
-.totalBox h1{
+.totalBox h1 {
   font-size: 25px;
 }
-.totalBox h3{
+.totalBox h3 {
   font-size: 15px;
 }
 .userTotal {
@@ -124,8 +199,8 @@ export default {
     rgb(117, 22, 224)
   );
 }
-.userTotal:hover{
-  box-shadow:0 5px 12px 0px rgb(109, 205, 243,0.8) ;
+.userTotal:hover {
+  box-shadow: 0 5px 12px 0px rgb(109, 205, 243, 0.8);
 }
 .orderTotal {
   background-image: linear-gradient(
@@ -134,8 +209,8 @@ export default {
     rgb(255, 0, 234)
   );
 }
-.orderTotal:hover{
-  box-shadow:0 5px 12px 0px rgb(255, 0, 234,0.5) ;
+.orderTotal:hover {
+  box-shadow: 0 5px 12px 0px rgb(255, 0, 234, 0.5);
 }
 .sendTotal {
   background-image: linear-gradient(
@@ -144,8 +219,8 @@ export default {
     rgb(183, 0, 255)
   );
 }
-.sendTotal:hover{
-  box-shadow:0 5px 12px 0px rgb(23, 51, 211,0.5) ;
+.sendTotal:hover {
+  box-shadow: 0 5px 12px 0px rgb(23, 51, 211, 0.5);
 }
 .finishTotal {
   background-image: linear-gradient(
@@ -154,7 +229,20 @@ export default {
     rgb(0, 162, 255)
   );
 }
-.finishTotal:hover{
-  box-shadow:0 5px 12px 0px rgb(23, 211, 195,0.5) ;
+.finishTotal:hover {
+  box-shadow: 0 5px 12px 0px rgb(23, 211, 195, 0.5);
+}
+.echartsBox {
+  width: 300px;
+  height: 300px;
+  margin-top: 20%;
+}
+.settingBox {
+  border-radius: 10px;
+  padding: 20px;
+  width: 100%;
+  height: 100%;
+  margin-top: 7%;
+  box-shadow: 0 5px 12px 0px rgb(199, 206, 204);
 }
 </style>\
