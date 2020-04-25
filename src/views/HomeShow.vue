@@ -51,6 +51,7 @@ export default {
   data() {
     return {
       min: "",
+      test:'',
       notice:'',
       userTotal: 0,
       orderTotal: 0,
