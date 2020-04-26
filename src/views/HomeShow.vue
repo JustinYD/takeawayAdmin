@@ -34,12 +34,13 @@
         <div class="settingBox">
           <div>
             短信发送阈值设置
-            <el-input-number v-model="min" @change="changeMin" :min="120" :max="5000" :step="50"></el-input-number>米
+            <el-input-number v-model="min" :min="120" :max="5000" :step="50"></el-input-number>米
+            <el-button @click="changeMin" class="changebtn">修改</el-button>
           </div>
           <!-- <div>
             
             添加通知<el-input placeholder="请输入内容" v-model="notice" clearable></el-input>
-          </div> -->
+          </div>-->
         </div>
       </el-col>
     </el-row>
@@ -50,9 +51,9 @@ import echartsLiquidfill from "echarts-liquidfill";
 export default {
   data() {
     return {
-      min: "",
-      test:'',
-      notice:'',
+      min: 3000,
+      test: "",
+      notice: "",
       userTotal: 0,
       orderTotal: 0,
       sendTotal: 0,
@@ -60,8 +61,26 @@ export default {
     };
   },
   methods: {
-    changeMin(value) {
-      console.log(value);
+    changeMin() {
+      let min = this.min;
+      let that=this
+      that.$http
+        .post(
+          "http://www.smartdk.top:4000/takeaway_changemin",
+          { min: min },
+          { emulateJSON: true }
+        )
+        .then(
+          function(res) {
+            if (res.body != "fail") {
+              that.$message.success('修改成功！');
+              that.getmin()
+            }
+          },
+          function(res) {
+            console.log(res.status);
+          }
+        );
     },
     //获取用户列表
     getuser() {
@@ -114,6 +133,19 @@ export default {
         function(res) {
           if (res.body != "fail") {
             that.sendTotal = res.body.length;
+          }
+        },
+        function(res) {
+          console.log(res.status);
+        }
+      );
+    },
+    getmin() {
+      var that = this;
+      this.$http.get("http://www.smartdk.top:4000/takeaway_getmin").then(
+        function(res) {
+          if (res.body != "fail") {
+            that.min = res.data[0][1];
           }
         },
         function(res) {
@@ -174,6 +206,7 @@ export default {
     this.getorder();
     this.getsuccess();
     this.getsend();
+    this.getmin();
   },
   mounted() {
     this.drawTest();
@@ -245,5 +278,13 @@ export default {
   height: 100%;
   margin-top: 7%;
   box-shadow: 0 5px 12px 0px rgb(199, 206, 204);
+}
+.changebtn {
+  color: white;
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(68, 180, 232),
+    rgb(170, 0, 255)
+  );
 }
 </style>\

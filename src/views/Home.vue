@@ -19,9 +19,7 @@
           <tap-bar></tap-bar>
         </el-aside>
         <el-main class="mainBox">
-          <el-collapse-transition>
-            <router-view />
-          </el-collapse-transition>
+          <router-view />
         </el-main>
       </el-container>
     </el-container>
