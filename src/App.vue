@@ -19,6 +19,8 @@ export default {
   margin:0;
   padding:0;
 }
-
+.test{
+  color: azure;
+}
 
 </style>
