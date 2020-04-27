@@ -36,13 +36,39 @@
             短信发送阈值设置
             <el-input-number v-model="min" :min="120" :max="5000" :step="50"></el-input-number>米
             <el-button @click="changeMin" class="changebtn">修改</el-button>
+            <el-button @click="addNotice" class="addbtn">添加通知</el-button>
           </div>
-          <!-- <div>
-            
-            添加通知<el-input placeholder="请输入内容" v-model="notice" clearable></el-input>
-          </div>-->
+          <div>
+            <el-divider>通知列表</el-divider>
+            <el-table :data="notice" height="270" style="width: 100%">
+              <el-table-column fixed prop="content" label="内容" sortable></el-table-column>
+              <el-table-column fixed prop="status" label="状态"  sortable></el-table-column>
+              <el-table-column fixed prop="time" label="创建时间" sortable></el-table-column>
+              <el-table-column fixed="right" label="操作">
+                <template slot-scope="scope" >
+                  <el-popconfirm size="small" v-if="scope.row.status=='正常'" title="确定下架该通知？" @onConfirm="deletenotice">
+                    <el-button slot="reference" type="danger" @click="downnotice(scope.row)" size="small">下架</el-button>
+                  </el-popconfirm>
+                  <el-popconfirm size="small" v-else title="确定发布该通知？" @onConfirm="updatenotice">
+                    <el-button slot="reference" type="primary" @click="upnotice(scope.row)" size="small">发布</el-button>
+                  </el-popconfirm>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
         </div>
       </el-col>
+      <el-dialog title="添加通知" :visible.sync="addflag">
+        <el-form :model="add">
+          <el-form-item label="内容" :label-width="formLabelWidth">
+            <el-input v-model="add.content" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="addflag = false">取 消</el-button>
+          <el-button type="primary" @click="addNoticeBtn">确 定</el-button>
+        </div>
+      </el-dialog>
     </el-row>
   </div>
 </template>
@@ -53,17 +79,127 @@ export default {
     return {
       min: 3000,
       test: "",
-      notice: "",
+      notice: [],
       userTotal: 0,
       orderTotal: 0,
       sendTotal: 0,
-      finishTotal: 0
+      finishTotal: 0,
+      addflag: false,
+      delete:{},
+      add: {
+        content: "",
+        time: ""
+      },
+      formLabelWidth: "60px"
     };
   },
   methods: {
+    downnotice(row){
+      this.delete=row
+    },
+    upnotice(row){
+      this.delete=row
+    },
+    updatenotice(){
+      var that = this;
+      let row=that.delete
+      this.$http
+        .post(
+          "http://www.smartdk.top:4000/takeaway_updatenotice",
+          { time: row.time },
+          { emulateJSON: true }
+        )
+        .then(
+          function(res) {
+            if (res.body != "fail") {
+              that.getAllNotice()
+              that.$message.success('发布成功！');
+            } else {
+              that.$message.error('已经发布！');
+            }
+          },
+          function(res) {
+            that.$message.success(res);
+          }
+        );
+    },
+    deletenotice(){
+      var that = this;
+      let row=that.delete
+      this.$http
+        .post(
+          "http://www.smartdk.top:4000/takeaway_deletenotice",
+          { time: row.time },
+          { emulateJSON: true }
+        )
+        .then(
+          function(res) {
+            if (res.body != "fail") {
+              that.getAllNotice()
+              that.$message.success('下架成功！');
+            } else {
+              that.$message.error('已经下架！');
+            }
+          },
+          function(res) {
+            that.$message.success(res);
+          }
+        );
+    },
+    addNoticeBtn() {
+      Date.prototype.Format = function(fmt) {
+        var o = {
+          "M+": this.getMonth() + 1, // 月份
+          "d+": this.getDate(), // 日
+          "h+": this.getHours(), // 小时
+          "m+": this.getMinutes(), // 分
+          "s+": this.getSeconds(), // 秒
+          "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+          S: this.getMilliseconds() // 毫秒
+        };
+        if (/(y+)/.test(fmt))
+          fmt = fmt.replace(
+            RegExp.$1,
+            (this.getFullYear() + "").substr(4 - RegExp.$1.length)
+          );
+        for (var k in o)
+          if (new RegExp("(" + k + ")").test(fmt))
+            fmt = fmt.replace(
+              RegExp.$1,
+              RegExp.$1.length == 1
+                ? o[k]
+                : ("00" + o[k]).substr(("" + o[k]).length)
+            );
+        return fmt;
+      };
+      this.add.time = new Date().Format("yyyy-MM-dd hh:mm:ss");
+      let that = this;
+      this.$http
+        .post(
+          "http://www.smartdk.top:4000/takeaway_addnotice",
+          that.add,
+          { emulateJSON: true }
+        )
+        .then(
+          function(res) {
+            if (res.body != "fail") {
+              that.$message.success("添加成功！");
+              that.getAllNotice();
+              that.addflag=false;
+            }
+          },
+          function(res) {
+            console.log(res.status);
+          }
+        );
+    },
+    addNotice() {
+      this.addflag = true;
+    },
+    
     changeMin() {
       let min = this.min;
-      let that=this
+      let that = this;
       that.$http
         .post(
           "http://www.smartdk.top:4000/takeaway_changemin",
@@ -73,7 +209,7 @@ export default {
         .then(
           function(res) {
             if (res.body != "fail") {
-              that.$message.success('修改成功！');
+              that.$message.success("修改成功！");
               that.getmin()
             }
           },
@@ -153,6 +289,32 @@ export default {
         }
       );
     },
+    getAllNotice() {
+      var that = this;
+      this.$http.get("http://www.smartdk.top:4000/takeaway_getallnotice").then(
+        function(res) {
+          if (res.body != "fail") {
+            that.notice = [];
+            for (let i = 0; i < res.data.length; i++) {
+              let flag = "";
+              if (res.data[i][2] == "1") {
+                flag = "正常";
+              } else {
+                flag = "已下架";
+              }
+              that.notice.push({
+                content: res.data[i][0],
+                time: res.data[i][1],
+                status: flag
+              });
+            }
+          }
+        },
+        function(res) {
+          that.$message.success(res.status);
+        }
+      );
+    },
     drawTest() {
       var total = this.orderTotal;
       var finish = this.finishTotal;
@@ -207,6 +369,7 @@ export default {
     this.getsuccess();
     this.getsend();
     this.getmin();
+    this.getAllNotice();
   },
   mounted() {
     this.drawTest();
@@ -257,6 +420,14 @@ export default {
   box-shadow: 0 5px 12px 0px rgb(23, 51, 211, 0.5);
 }
 .finishTotal {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(23, 211, 195),
+    rgb(0, 162, 255)
+  );
+}
+.addbtn {
+  color: white;
   background-image: linear-gradient(
     to bottom right,
     rgb(23, 211, 195),

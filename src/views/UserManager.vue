@@ -26,9 +26,9 @@
               <el-table-column fixed="right" label="操作" >
                 <template slot-scope="scope">
                   <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                  <el-button type="text" size="small" @click="option(scope.row)">编辑</el-button>
+                  <el-button type="text" size="small" style="color:orange" @click="option(scope.row)">编辑</el-button>
                   <el-popconfirm size="small" title="确定删除该用户？" @onConfirm="deleteuser">
-                    <el-button slot="reference" type="danger" @click="getDelete(scope.row)" size="small">删除</el-button>
+                    <el-button slot="reference" type="text" style="color:red" @click="getDelete(scope.row)" size="small">删除</el-button>
                   </el-popconfirm>
                 </template>
               </el-table-column>
