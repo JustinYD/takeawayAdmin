@@ -101,11 +101,12 @@ export default {
   height: 100%;
   position: fixed;
   background-size: 100% 100%;
-  background-image: linear-gradient(
+  background: radial-gradient(circle at 33% 33%,rgba(149,176,249,1), rgba(149,176,249,0) 50%), radial-gradient(circle at 11% 11%,rgba(114,226,253,1), rgba(114,226,253,0) 50%), radial-gradient(circle at 79% 39%,rgba(184,150,255,1), rgba(184,150,255,0) 50%), radial-gradient(circle at 90% 90%,rgba(86,207,210,1), rgba(86,207,210,0) 50%), radial-gradient(circle at 10% 90%,rgba(168,112,253,1), rgba(168,112,253,0) 50%) ;
+  /* background-image: linear-gradient(
     to bottom right,
     rgb(23, 211, 195),
     rgb(0, 162, 255)
-  );
+  ); */
 }
 .loginBox {
   margin-top: 10%;
