@@ -390,41 +390,53 @@ export default {
   font-size: 15px;
 }
 .userTotal {
+  box-shadow: 0 5px 12px 0px rgba(162, 163, 164, 0.8);
+  color: rgba(97, 97, 97, 0.81);
+  border: rgb(198, 193, 193) solid 1px;
+}
+.userTotal:hover {
   background-image: linear-gradient(
     to bottom right,
     rgb(109, 205, 243),
     rgb(117, 22, 224)
   );
-}
-.userTotal:hover {
-  box-shadow: 0 5px 12px 0px rgb(109, 205, 243, 0.8);
+  color: white;
+  box-shadow: 0 5px 12px 0px rgba(255, 255, 255);
 }
 .orderTotal {
+  box-shadow: 0 5px 12px 0px rgba(162, 163, 164, 0.8);
+  color: rgba(97, 97, 97, 0.81);
+  border: rgb(198, 193, 193) solid 1px;
+  
+}
+.orderTotal:hover {
   background-image: linear-gradient(
     to bottom right,
     rgb(23, 211, 195),
     rgb(255, 0, 234)
   );
-}
-.orderTotal:hover {
-  box-shadow: 0 5px 12px 0px rgb(255, 0, 234, 0.5);
+  box-shadow: 0 5px 12px 0px rgb(255, 255, 255);
+  color: white;
 }
 .sendTotal {
+  box-shadow: 0 5px 12px 0px rgba(162, 163, 164, 0.8);
+  color: rgba(97, 97, 97, 0.81);
+  border: rgb(198, 193, 193) solid 1px;
+}
+.sendTotal:hover {
   background-image: linear-gradient(
     to bottom right,
     rgb(23, 51, 211),
     rgb(183, 0, 255)
   );
-}
-.sendTotal:hover {
-  box-shadow: 0 5px 12px 0px rgb(23, 51, 211, 0.5);
+  box-shadow: 0 5px 12px 0px rgba(254, 254, 254);
+  color: white;
 }
 .finishTotal {
-  background-image: linear-gradient(
-    to bottom right,
-    rgb(23, 211, 195),
-    rgb(0, 162, 255)
-  );
+  box-shadow: 0 5px 12px 0px rgba(162, 163, 164, 0.8);
+  color: rgba(97, 97, 97, 0.81);
+  border: rgb(198, 193, 193) solid 1px;
+  
 }
 .addbtn {
   color: white;
@@ -435,7 +447,13 @@ export default {
   );
 }
 .finishTotal:hover {
-  box-shadow: 0 5px 12px 0px rgb(23, 211, 195, 0.5);
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(23, 211, 195),
+    rgb(0, 162, 255)
+  );
+  box-shadow: 0 5px 12px 0px rgb(252, 252, 252);
+  color: white;
 }
 .echartsBox {
   width: 300px;
